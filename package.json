@@ -1,0 +1,26 @@
+{
+  "name": "urban-octo-umbrella",
+  "version": "1.0.0",
+  "description": "Liri Node Application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brityank/urban-octo-umbrella.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brityank/urban-octo-umbrella/issues"
+  },
+  "homepage": "https://github.com/brityank/urban-octo-umbrella#readme",
+  "dependencies": {
+    "axios": "^0.19.0",
+    "dotenv": "^8.0.0",
+    "luxon": "^1.16.1",
+    "node-spotify-api": "^1.1.1"
+  }
+}
