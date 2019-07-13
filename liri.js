@@ -11,9 +11,9 @@ const spotify = new Spotify(keys.spotify);
 
 const [operation, param] = [process.argv[2], process.argv[3]];
 
-choose(operation);
+choose(operation, param);
 
-function choose(operation) {
+function choose(operation, param) {
   switch (operation) {
     case "concert-this":
       concertSearch(param);
@@ -25,6 +25,7 @@ function choose(operation) {
       artistSearch(param);
       break;
     case "do-what-it-says":
+      customCommand();
       break;
     case "movie-search":
       movieSearch(param);
@@ -37,19 +38,15 @@ function choose(operation) {
 function movieSearch(title) {
   axios
     .get(`http://www.omdbapi.com/?apikey=${process.env.OMDB_API}&`)
-    .then(data => data.data)
-    .then(data => console.log(data));
+    .then(response => console.log(response));
 }
 
 function concertSearch(artist) {
   axios
     .get(
-      `https://rest.bandsintown.com/artists/${artist}/events?app_id=${
-        process.env.BANDSINTOWN_API
-      }`
+      `https://rest.bandsintown.com/artists/${artist}/events?app_id=${process.env.BANDSINTOWN_API}`
     )
-    .then(data => data.data)
-    .then(data => console.log(data));
+    .then(response => console.log(response.length, "concerts"));
 }
 
 function artistSearch(artist) {
@@ -57,7 +54,7 @@ function artistSearch(artist) {
     if (err) {
       return console.log(`Error occurred: ${err}`);
     }
-    console.log(content.items[0]);
+    console.log(content.artists.items[0]);
   });
 }
 
@@ -66,13 +63,14 @@ function songSearch(track) {
     if (err) {
       return console.log(`Error occurred: ${err}`);
     }
-    console.log(content.items);
+    console.log(content.tracks.items[0]);
   });
 }
 
 function customCommand() {
-  fs.readFile(path(__dirname, "files", "random.txt"), 'utf8', (err, data) => {
+  fs.readFile(path(__dirname, "files", "random.txt"), "utf8", (err, data) => {
     if (err) throw err;
-    console.log(data);
+    const [op, param] = [data.split(",")];
+    choose(op, param);
   });
 }
