@@ -1,3 +1,5 @@
+const fs = require("fs");
+
 function sentenceCase(str) {
   return str
     .split(" ")
@@ -5,4 +7,10 @@ function sentenceCase(str) {
     .join(" ");
 }
 
-module.exports = sentenceCase;
+function logger(data) {
+  fs.appendFile("./files/log.txt", data, err => {
+    if (err) throw new Error(`Error: ${err.message}`);
+  });
+}
+
+module.exports = { sentenceCase, logger };

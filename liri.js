@@ -8,7 +8,7 @@ const path = require("path");
 const axios = require("axios").default;
 const keys = require("./keys");
 const Spotify = require("node-spotify-api");
-const sentenceCase = require("./helpers");
+const { sentenceCase, logger } = require("./helpers");
 
 // Assign credentials to Spotify instance
 const spotify = new Spotify(keys.spotify);
@@ -47,14 +47,18 @@ function movieSearch(title) {
     .get(`http://www.omdbapi.com/?t=${title}&apikey=${process.env.OMDB_API}`)
     .then(res => {
       const result = res.data;
-      console.log(`
+      const data = `
+      ==============MOVIE==============
+
       Title: ${result.Title}
       Year: ${result.Year}
       Rating: ${result.Rated}
       Genre: ${result.Genre}
       Cast: ${result.Actors}
       Awards: ${result.Awards}
-      `);
+      `;
+      logger(data);
+      console.log(data);
     });
 }
 
@@ -67,10 +71,16 @@ function concertSearch(artist) {
       }`
     )
     .then(res => {
+      const data = `
+      ===============${sentenceCase(artist)}'s Upcoming Concerts===============
+
+      Venue: ${res.data[i].venue.name}, ${res.data[i].venue.city}
+      Date: ${dt.fromISO(res.data[i].datetime).toLocaleString()}
+      `;
+      logger(data);
       console.log(`
-      =======================================
-      ${sentenceCase(artist)}'s 5 Upcoming Concerts
-      =======================================
+      ===============${sentenceCase(artist)}'s Upcoming Concerts===============
+
       `);
 
       // Iterate through first five concerts listed and list venue name, city, and date
@@ -91,12 +101,17 @@ function artistSearch(artist) {
     }
     const result = content.artists.items[0];
 
-    console.log(`
+    const data = `
+    ==============SPOTIFY ARTIST==============
+
     Artist: ${result.name}
     Genre(s): ${result.genres.join(", ")}
     Followers: ${result.followers.total}
     Link: ${result.href}
-    `);
+    `;
+
+    logger(data);
+    console.log(data);
   });
 }
 
@@ -109,12 +124,17 @@ function songSearch(track) {
 
     const result = content.tracks.items[0];
 
-    console.log(`
+    const data = `
+    ==============SPOTIFY SONG==============
+
     Artist: ${result.artists[0].name}
     Song: ${result.name}
     Preview Link: ${result.preview_url}
     Album: ${result.album.name}
-    `);
+    `;
+
+    logger(data);
+    console.log(data);
   });
 }
 // function to read custom file and run choose function for each set of entries
