@@ -48,18 +48,19 @@ function movieSearch(title) {
     .then(res => {
       const result = res.data;
       const data = `
-      ==============MOVIE==============
+    ==============MOVIE==============
 
-      Title: ${result.Title}
-      Year: ${result.Year}
-      Rating: ${result.Rated}
-      Genre: ${result.Genre}
-      Cast: ${result.Actors}
-      Awards: ${result.Awards}
+    Title: ${result.Title}
+    Year: ${result.Year}
+    Rating: ${result.Rated}
+    Genre: ${result.Genre}
+    Cast: ${result.Actors}
+    Awards: ${result.Awards}
       `;
       logger(data);
       console.log(data);
-    });
+    })
+    .catch(err => console.log(`Error: ${err.message}`));
 }
 
 // Call to bandsintown API
@@ -71,33 +72,38 @@ function concertSearch(artist) {
       }`
     )
     .then(res => {
+      // Only append lastest concert to log
+      // Use luxon to format ISO date as Locale String (DD/MM/YYYY)
       const data = `
-      ===============${sentenceCase(artist)}'s Upcoming Concerts===============
 
-      Venue: ${res.data[i].venue.name}, ${res.data[i].venue.city}
-      Date: ${dt.fromISO(res.data[i].datetime).toLocaleString()}
+    ===============${sentenceCase(artist)}'s Next Concert===============
+
+    Venue: ${res.data[0].venue.name}, ${res.data[0].venue.city}
+    Date: ${dt.fromISO(res.data[0].datetime).toLocaleString()}
       `;
       logger(data);
       console.log(`
-      ===============${sentenceCase(artist)}'s Upcoming Concerts===============
+    ===============${sentenceCase(artist)}'s Upcoming Concerts===============
 
       `);
-
-      // Iterate through first five concerts listed and list venue name, city, and date
-      for (let i = 0; i < 5; i++) {
+      // Set length of log to either length of response or 5
+      let length = res.data.length < 5 ? res.data.length : 5;
+      // Iterate through concerts listed and list venue name, city, and date
+      for (let i = 0; i < length; i++) {
         console.log(`
-        Venue: ${res.data[i].venue.name}, ${res.data[i].venue.city}
-        Date: ${dt.fromISO(res.data[i].datetime).toLocaleString()}
+    Venue: ${res.data[i].venue.name}, ${res.data[i].venue.city}
+    Date: ${dt.fromISO(res.data[i].datetime).toLocaleString()}
         `);
       }
-    });
+    })
+    .catch(err => console.log(`Error: ${err.message}`));
 }
 
 // Call to spotify artist API
 function artistSearch(artist) {
   spotify.search({ type: "artist", query: artist }, (err, content) => {
     if (err) {
-      return console.log(`Error occurred: ${err}`);
+      return console.log(`Error occurred: ${err.message}`);
     }
     const result = content.artists.items[0];
 
@@ -119,7 +125,7 @@ function artistSearch(artist) {
 function songSearch(track) {
   spotify.search({ type: "track", query: track }, (err, content) => {
     if (err) {
-      return console.log(`Error occurred: ${err}`);
+      return console.log(`Error occurred: ${err.message}`);
     }
 
     const result = content.tracks.items[0];
@@ -143,7 +149,7 @@ function customCommand() {
     path.join(__dirname, "files", "random.txt"),
     "utf8",
     (err, data) => {
-      if (err) throw err;
+      if (err) throw new Error(`Error: ${err.message}`);
       // Split file by newlines
       const lines = data.split("\n");
       // Iterate through each line and run choose()
