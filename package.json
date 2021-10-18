@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/brityank/urban-octo-umbrella#readme",
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "dotenv": "^8.0.0",
     "luxon": "^1.16.1",
     "node-spotify-api": "^1.1.1"
