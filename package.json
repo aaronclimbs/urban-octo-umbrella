@@ -20,7 +20,7 @@
   "dependencies": {
     "axios": "^0.21.2",
     "dotenv": "^8.0.0",
-    "luxon": "^1.16.1",
+    "luxon": "^1.28.1",
     "node-spotify-api": "^1.1.1"
   }
 }
